@@ -590,7 +590,7 @@ export class Tokenizer {
 
         const next = this.peekCodePoint(0);
         if (next === APOSTROPHE || next === QUOTATION_MARK) {
-            const stringToken = this.consumeStringToken(this.consumeCodePoint());
+            const stringToken = this.consumeUrlStringToken(this.consumeCodePoint());
             if (stringToken.type === TokenType.STRING_TOKEN) {
                 this.consumeWhiteSpace();
 
@@ -667,6 +667,28 @@ export class Tokenizer {
         this._value.shift();
 
         return value;
+    }
+
+    private consumeUrlStringToken(endingCodePoint: number): StringValueToken | Token {
+        if (String.fromCharCode.apply(null, this._value.slice(0, 'data:'.length)) === 'data:') {
+            let index = 0;
+            let value = '';
+            let slice;
+            const SLICE_STACK_SIZE = 10000;
+
+            do {
+                slice = this._value.slice(index, index + SLICE_STACK_SIZE);
+                value += String.fromCharCode.apply(null, slice);
+                index += SLICE_STACK_SIZE;
+            } while (slice.length === SLICE_STACK_SIZE);
+
+            value = value.replace(/['"]?\)$/, '')
+            this._value = [];
+
+            return {type: TokenType.STRING_TOKEN, value};
+        } else {
+            return this.consumeStringToken(endingCodePoint);
+        }
     }
 
     private consumeStringToken(endingCodePoint: number): StringValueToken | Token {
