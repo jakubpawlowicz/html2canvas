@@ -316,7 +316,7 @@ export class Tokenizer {
     }
 
     write(chunk: string): void {
-        this._value = this._value.concat(toCodePoints(chunk));
+        this._value = this._value.length > 0 ? this._value.concat(toCodePoints(chunk)) : toCodePoints(chunk);
     }
 
     read(): CSSToken[] {
