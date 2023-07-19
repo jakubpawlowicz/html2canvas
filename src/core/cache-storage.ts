@@ -45,6 +45,10 @@ export class Cache {
             return result;
         }
 
+        if (isInlineImage(src)) {
+            return result;
+        }
+
         if (isBlobImage(src) || isRenderable(src)) {
             (this._cache[src] = this.loadImage(src)).catch(() => {
                 // prevent unhandled rejection
