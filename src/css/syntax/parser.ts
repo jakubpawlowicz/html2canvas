@@ -34,7 +34,7 @@ export class Parser {
     }
 
     static create(value: string): Parser {
-        const tokenizer = new Tokenizer();
+        const tokenizer = new Tokenizer(function(chunk: string, callback: (chunk: string) => number[]) { return callback(chunk); });
         tokenizer.write(value);
         return new Parser(tokenizer.read());
     }

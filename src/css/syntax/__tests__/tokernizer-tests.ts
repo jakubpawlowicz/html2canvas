@@ -2,7 +2,7 @@ import {deepEqual} from 'assert';
 import {Tokenizer, TokenType} from '../tokenizer';
 
 const tokenize = (value: string) => {
-    const tokenizer = new Tokenizer();
+    const tokenizer = new Tokenizer(function(chunk: string, callback: (chunk: string) => number[]) { return callback(chunk); });
     tokenizer.write(value);
     return tokenizer.read();
 };

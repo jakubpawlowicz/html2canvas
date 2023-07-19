@@ -310,13 +310,16 @@ export const EOF_TOKEN: Token = {type: TokenType.EOF_TOKEN};
 
 export class Tokenizer {
     private _value: number[];
+    private _tokenizerCache: (chunk: string, callback: (chunk: string) => number[]) => number[];
 
-    constructor() {
+    constructor(tokenizerCache: (chunk: string, callback: (chunk: string) => number[]) => number[]) {
+        this._tokenizerCache = tokenizerCache;
         this._value = [];
     }
 
     write(chunk: string): void {
-        this._value = this._value.length > 0 ? this._value.concat(toCodePoints(chunk)) : toCodePoints(chunk);
+        var newValue = this._tokenizerCache(chunk, toCodePoints) || [];
+        this._value = this._value.length > 0 ? this._value.concat(newValue) : newValue;
     }
 
     read(): CSSToken[] {

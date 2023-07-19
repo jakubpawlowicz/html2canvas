@@ -43,6 +43,7 @@ const createMockContext = (origin: string, opts = {}) => {
             imageTimeout: 0,
             useCORS: false,
             allowTaint: false,
+            tokenizerCache: (chunk: string, callback: (chunk: string) => number[]) => callback(chunk),
             proxy,
             ...opts
         },

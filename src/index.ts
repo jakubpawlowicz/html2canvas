@@ -52,6 +52,7 @@ const renderElement = async (element: HTMLElement, opts: Partial<Options>): Prom
     const contextOptions = {
         logging: opts.logging ?? true,
         cache: opts.cache,
+        tokenizerCache: opts.tokenizerCache || function(chunk: string, callback: (chunk: string) => number[]) { return callback(chunk); },
         ...resourceOptions
     };
 
